@@ -6,9 +6,9 @@ public class cliente {
     private String telefono;
     private String direccion;
     private boolean tieneLibroPrestado;
+    private String idLibroPrestado;
 
-
-    public Cliente(String documento, String nombre, String telefono, String direccion, boolean tieneLibroPrestado) {
+    public cliente(String documento, String nombre, String telefono, String direccion, boolean tieneLibroPrestado) {
         this.documento = documento;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -57,5 +57,24 @@ public class cliente {
     }
     public void marcarLibroPrestado(){
         this.tieneLibroPrestado = true;
+    }
+    public boolean tieneLibroPrestado() {
+        return this.idLibroPrestado != null;
+    }
+    public void devolverLibro() {
+        this.idLibroPrestado = null;
+    }
+    public String mostrarInformacion() {
+        String pendiente = tieneLibroPrestado()
+                ? "Libro en préstamo: " + idLibroPrestado
+                : "Sin libros pendientes";
+        return "[" + documento + "] " + nombre
+                + " | Tel: " + telefono
+                + " | Dir: " + direccion
+                + " | " + pendiente;
+    }
+    @Override
+    public String toString() {
+        return mostrarInformacion();
     }
 }
