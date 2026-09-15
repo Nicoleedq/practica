@@ -1,6 +1,6 @@
 package com.librosymas.modelo;
 
-public class cliente {
+public class Cliente {
     private String documento;
     private String nombre;
     private String telefono;
@@ -8,7 +8,7 @@ public class cliente {
     private boolean tieneLibroPrestado;
 
 
-    public void Cliente(String documento, String nombre, String telefono, String direccion, boolean tieneLibroPrestado) {
+    public Cliente(String documento, String nombre, String telefono, String direccion, boolean tieneLibroPrestado) {
         this.documento = documento;
         this.nombre = nombre;
         this.telefono = telefono;

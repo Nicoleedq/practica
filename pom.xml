@@ -11,6 +11,7 @@
 
     <properties>
         <!-- Versión de Java. Deben usar LA MISMA las dos -->
+
         <maven.compiler.release>26.0.2</maven.compiler.release>
         <!-- Para que las tildes y la ñ se lean bien en el código -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
