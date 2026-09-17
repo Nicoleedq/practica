@@ -1,35 +1,41 @@
 package com.librosymas.modelo;
 
+/**
+ * Representa a un cliente registrado de la biblioteca.
+ * Política interna: cada cliente puede tener máximo UN libro en préstamo.
+ *
+ * Responsable: Nicole  |  Rama: featureCliente
+ */
 public class Cliente {
-    private String documento;
-    private String nombre;
+
+    private final String documento;   // identificador único del cliente
+    private String nombreCompleto;
     private String telefono;
     private String direccion;
-    private boolean tieneLibroPrestado;
 
+    // Guarda el id del libro prestado. Si es null, el cliente no tiene ninguno.
+    private String idLibroPrestado;
 
-    public Cliente(String documento, String nombre, String telefono, String direccion, boolean tieneLibroPrestado) {
+    public Cliente(String documento, String nombreCompleto, String telefono, String direccion) {
         this.documento = documento;
-        this.nombre = nombre;
+        this.nombreCompleto = nombreCompleto;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.tieneLibroPrestado = tieneLibroPrestado;
+        this.idLibroPrestado = null;
     }
+
+    // ---------- Getters y setters ----------
 
     public String getDocumento() {
         return documento;
     }
 
-    public void setDocumento(String documento) {
-        this.documento = documento;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public String getTelefono() {
@@ -48,14 +54,48 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public boolean isTieneLibroPrestado() {
-        return tieneLibroPrestado;
+    public String getIdLibroPrestado() {
+        return idLibroPrestado;
     }
 
-    public void setTieneLibroPrestado(boolean tieneLibroPrestado) {
-        this.tieneLibroPrestado = tieneLibroPrestado;
+    // ---------- Métodos de comportamiento ----------
+
+    /**
+     * Indica si el cliente tiene actualmente un libro en préstamo.
+     */
+    public boolean tieneLibroPrestado() {
+        return this.idLibroPrestado != null;
     }
-    public void marcarLibroPrestado(){
-        this.tieneLibroPrestado = true;
+
+    /**
+     * Marca que el cliente recibió un libro.
+     */
+    public void recibirLibro(String idLibro) {
+        this.idLibroPrestado = idLibro;
+    }
+
+    /**
+     * Marca que el cliente devolvió el libro y queda sin pendientes.
+     */
+    public void devolverLibro() {
+        this.idLibroPrestado = null;
+    }
+
+    /**
+     * Información completa del cliente en formato de texto.
+     */
+    public String mostrarInformacion() {
+        String pendiente = tieneLibroPrestado()
+                ? "Libro en préstamo: " + idLibroPrestado
+                : "Sin libros pendientes";
+        return "[" + documento + "] " + nombreCompleto
+                + " | Tel: " + telefono
+                + " | Dir: " + direccion
+                + " | " + pendiente;
+    }
+
+    @Override
+    public String toString() {
+        return mostrarInformacion();
     }
 }
