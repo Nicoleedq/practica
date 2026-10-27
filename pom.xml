@@ -10,10 +10,31 @@
     <version>1.0</version>
 
     <properties>
-        <!-- Versión de Java. Deben usar LA MISMA las dos -->
-
-        <maven.compiler.release>26.0.2</maven.compiler.release>
+        <!-- Versión de Java. Deben usar LA MISMA las dos.
+             Debe ser un número entero (17, 21, 25...), NO la versión completa del JDK (26.0.2).
+             21 es LTS y compila con cualquier JDK 21 o superior (incluido el 26). -->
+        <maven.compiler.release>21</maven.compiler.release>
         <!-- Para que las tildes y la ñ se lean bien en el código -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <!-- El .jar se llamará biblioteca.jar (lo usa el Dockerfile) -->
+        <finalName>biblioteca</finalName>
+        <plugins>
+            <!-- Indica la clase Main dentro del .jar para poder hacer: java -jar biblioteca.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.librosymas.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

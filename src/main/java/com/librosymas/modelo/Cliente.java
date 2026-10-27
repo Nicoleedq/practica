@@ -16,6 +16,9 @@ public class Cliente {
     // Guarda el id del libro prestado. Si es null, el cliente no tiene ninguno.
     private String idLibroPrestado;
 
+    // Total de multas que el cliente aún no ha pagado (pesos).
+    private long multaPendiente;
+
     public Cliente(String documento, String nombreCompleto, String telefono, String direccion) {
         this.documento = documento;
         this.nombreCompleto = nombreCompleto;
@@ -81,6 +84,32 @@ public class Cliente {
         this.idLibroPrestado = null;
     }
 
+    // ---------- Multas ----------
+
+    public long getMultaPendiente() {
+        return multaPendiente;
+    }
+
+    public boolean tieneMultasPendientes() {
+        return multaPendiente > 0;
+    }
+
+    /**
+     * Acumula una multa en el perfil del cliente.
+     */
+    public void agregarMulta(long valor) {
+        if (valor > 0) {
+            this.multaPendiente += valor;
+        }
+    }
+
+    /**
+     * Deja el saldo de multas en cero (el cliente pagó todo).
+     */
+    public void pagarMultas() {
+        this.multaPendiente = 0;
+    }
+
     /**
      * Información completa del cliente en formato de texto.
      */
@@ -91,7 +120,8 @@ public class Cliente {
         return "[" + documento + "] " + nombreCompleto
                 + " | Tel: " + telefono
                 + " | Dir: " + direccion
-                + " | " + pendiente;
+                + " | " + pendiente
+                + " | Multas pendientes: $" + multaPendiente;
     }
 
     @Override

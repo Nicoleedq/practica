@@ -5,33 +5,53 @@ import com.librosymas.modelo.Cliente;
 import com.librosymas.modelo.Libro;
 import com.librosymas.servicio.GestionClientes;
 import com.librosymas.servicio.Inventario;
+import com.librosymas.servicio.Persistencia;
+import com.librosymas.servicio.ServicioMultas;
 import com.librosymas.servicio.ServicioPrestamos;
+import com.librosymas.servicio.ServicioReportes;
+import com.librosymas.servicio.ServicioReservas;
 import com.librosymas.ui.Menu;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
  * Punto de entrada del sistema.
- * Crea los servicios, carga unos datos de prueba y lanza el menú.
+ * Crea los servicios, carga los datos guardados (o unos de prueba la primera vez) y lanza el menú.
  */
 public class Main {
 
     public static void main(String[] args) {
         Inventario inventario = new Inventario();
         GestionClientes gestionClientes = new GestionClientes();
-        ServicioPrestamos servicioPrestamos = new ServicioPrestamos(inventario, gestionClientes);
+        ServicioMultas servicioMultas = new ServicioMultas(gestionClientes);
+        ServicioReservas servicioReservas = new ServicioReservas(inventario, gestionClientes);
+        ServicioPrestamos servicioPrestamos = new ServicioPrestamos(inventario, gestionClientes,
+                servicioMultas, servicioReservas);
+        ServicioReportes servicioReportes = new ServicioReportes(inventario, gestionClientes, servicioPrestamos);
 
-        cargarDatosDePrueba(inventario, gestionClientes);
+        Persistencia persistencia = new Persistencia(inventario, gestionClientes,
+                servicioPrestamos, servicioReservas, servicioMultas);
 
-        Scanner sc = new Scanner(System.in);
-        Menu menu = new Menu(inventario, gestionClientes, servicioPrestamos, sc);
+        if (persistencia.existenDatos()) {
+            persistencia.cargar();
+            System.out.println("Datos cargados desde: " + persistencia.getCarpeta());
+        } else {
+            cargarDatosDePrueba(inventario, gestionClientes);
+            persistencia.guardar();
+            System.out.println("Primera ejecución: se crearon datos de prueba en " + persistencia.getCarpeta());
+        }
+
+        Scanner sc = new Scanner(System.in, StandardCharsets.UTF_8);
+        Menu menu = new Menu(inventario, gestionClientes, servicioPrestamos, servicioReservas,
+                servicioMultas, servicioReportes, persistencia, sc);
         menu.iniciar();
         sc.close();
     }
 
     /**
      * Datos iniciales para poder probar el sistema sin registrar todo a mano.
-     * Se puede borrar si el profesor pide arrancar con el sistema vacío.
+     * Solo se cargan la primera vez (cuando todavía no hay archivos de datos).
      */
     private static void cargarDatosDePrueba(Inventario inventario, GestionClientes gestionClientes) {
         inventario.registrarLibro(new Libro("L001", "Cien años de soledad", "Gabriel García Márquez",
